@@ -1,4 +1,5 @@
-# v2ray-agent
+# v2ray-agent - Fork
+> Fork改动: 精简配置，大幅改善刷新订阅时无网络的问题，以及某些 ClashMeta 客户端无法连接 Reality 节点的问题
 
 - [感谢 JetBrains 提供的非商业开源软件开发授权](https://www.jetbrains.com/?from=v2ray-agent)
 
@@ -28,7 +29,7 @@ Xray-core/sing-box 一键脚本快速安装
 ### 安装脚本版
 
 ```
-wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/xjyzs/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
 ```
 
 ### 使用
@@ -41,7 +42,7 @@ vasma
 
 ### 安装Docker版
 ```
-wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/shell/docker_reality.sh" && chmod 700 /root/docker_reality.sh && /root/docker_reality.sh
+wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/xjyzs/v2ray-agent/master/shell/docker_reality.sh" && chmod 700 /root/docker_reality.sh && /root/docker_reality.sh
 ```
 
 ### 使用 
@@ -70,7 +71,7 @@ vasmad
 
 *   **Telegram:** [频道](https://t.me/v2rayAgentChannel) | [群组](https://t.me/technologyshare)
 *   **网站:** [官网](https://www.v2ray-agent.com/) | [备用](https://www.592083.xyz/)
-*   **反馈:** [提交 issue](https://github.com/mack-a/v2ray-agent/issues)
+*   **反馈:** [提交 issue](https://github.com/xjyzs/v2ray-agent/issues)
 *   **X:** [链接](https://x.com/v2rayagent)
 
 ## 捐赠

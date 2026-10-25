@@ -5257,6 +5257,7 @@ EOF
     reality-opts:
       public-key: ${currentRealityXHTTPPublicKey}
       short-id: 6ba85179e30d4fc2
+      support-x25519mlkem768: true
 EOF
 
         echoContent yellow " ---> 二维码 VLESS(VLESS+reality+XHTTP)"
@@ -5417,6 +5418,7 @@ EOF
     reality-opts:
       public-key: ${publicKey}
       short-id: 6ba85179e30d4fc2
+      support-x25519mlkem768: true
     client-fingerprint: chrome
 EOF
 
@@ -5459,6 +5461,7 @@ EOF
     reality-opts:
       public-key: ${publicKey}
       short-id: 6ba85179e30d4fc2
+      support-x25519mlkem768: true
     grpc-opts:
       grpc-service-name: "grpc"
     client-fingerprint: chrome
@@ -9310,385 +9313,23 @@ clashMetaConfig() {
     local url=$1
     local id=$2
     cat <<EOF >"/etc/v2ray-agent/subscribe/clashMetaProfiles/${id}"
-log-level: debug
-mode: rule
-ipv6: true
-mixed-port: 7890
-allow-lan: true
-bind-address: "*"
-lan-allowed-ips:
-  - 0.0.0.0/0
-  - ::/0
-find-process-mode: strict
-external-controller: 0.0.0.0:9090
-
-geox-url:
-  geoip: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
-  geosite: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
-  mmdb: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.metadb"
-geo-auto-update: true
-geo-update-interval: 24
-
-external-controller-cors:
-  allow-private-network: true
-
-profile:
-  store-selected: true
-  store-fake-ip: true
-
-sniffer:
-  enable: true
-  override-destination: false
-  sniff:
-    QUIC:
-      ports: [ 443 ]
-    TLS:
-      ports: [ 443 ]
-    HTTP:
-      ports: [80]
-
-
-dns:
-  enable: true
-  prefer-h3: false
-  listen: 0.0.0.0:1053
-  ipv6: true
-  enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
-  fake-ip-filter:
-    - '*.lan'
-    - '*.local'
-    - 'dns.google'
-    - "localhost.ptlogin2.qq.com"
-  use-hosts: true
-  nameserver:
-    - https://1.1.1.1/dns-query
-    - https://8.8.8.8/dns-query
-    - 1.1.1.1
-    - 8.8.8.8
-  proxy-server-nameserver:
-    - https://223.5.5.5/dns-query
-    - https://1.12.12.12/dns-query
-  nameserver-policy:
-    "geosite:cn,private":
-      - https://doh.pub/dns-query
-      - https://dns.alidns.com/dns-query
-
 proxy-providers:
   ${subscribeSalt}_provider:
     type: http
     path: ./${subscribeSalt}_provider.yaml
     url: ${url}
-    interval: 3600
-    proxy: DIRECT
-    health-check:
-      enable: true
-      url: https://cp.cloudflare.com/generate_204
-      interval: 300
 
 proxy-groups:
   - name: 手动切换
     type: select
     use:
       - ${subscribeSalt}_provider
-    proxies: null
-  - name: 自动选择
-    type: url-test
-    url: https://cp.cloudflare.com/generate_204
-    interval: 36000
-    tolerance: 50
-    use:
-      - ${subscribeSalt}_provider
-    proxies: null
 
-  - name: 全球代理
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 手动切换
-      - 自动选择
-
-  - name: 流媒体
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 手动切换
-      - 自动选择
-      - DIRECT
-  - name: DNS_Proxy
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 自动选择
-      - 手动切换
-      - DIRECT
-
-  - name: Telegram
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 手动切换
-      - 自动选择
-  - name: Google
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 手动切换
-      - 自动选择
-      - DIRECT
-  - name: YouTube
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 手动切换
-      - 自动选择
-  - name: Netflix
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 流媒体
-      - 手动切换
-      - 自动选择
-  - name: Spotify
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 流媒体
-      - 手动切换
-      - 自动选择
-      - DIRECT
-  - name: HBO
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 流媒体
-      - 手动切换
-      - 自动选择
-  - name: Bing
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 手动切换
-      - 自动选择
-
-
-  - name: OpenAI
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 手动切换
-      - 自动选择
-
-  - name: ClaudeAI
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 手动切换
-      - 自动选择
-
-  - name: Disney
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 流媒体
-      - 手动切换
-      - 自动选择
-  - name: GitHub
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - 手动切换
-      - 自动选择
-      - DIRECT
-
-  - name: 国内媒体
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - DIRECT
-  - name: 本地直连
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - DIRECT
-      - 自动选择
-  - name: 漏网之鱼
-    type: select
-    use:
-      - ${subscribeSalt}_provider
-    proxies:
-      - DIRECT
-      - 手动切换
-      - 自动选择
-rule-providers:
-  lan:
-    type: http
-    behavior: classical
-    interval: 86400
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Lan/Lan.yaml
-    path: ./Rules/lan.yaml
-  reject:
-    type: http
-    behavior: domain
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/reject.txt
-    path: ./ruleset/reject.yaml
-    interval: 86400
-  proxy:
-    type: http
-    behavior: domain
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt
-    path: ./ruleset/proxy.yaml
-    interval: 86400
-  direct:
-    type: http
-    behavior: domain
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt
-    path: ./ruleset/direct.yaml
-    interval: 86400
-  private:
-    type: http
-    behavior: domain
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt
-    path: ./ruleset/private.yaml
-    interval: 86400
-  gfw:
-    type: http
-    behavior: domain
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/gfw.txt
-    path: ./ruleset/gfw.yaml
-    interval: 86400
-  greatfire:
-    type: http
-    behavior: domain
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/greatfire.txt
-    path: ./ruleset/greatfire.yaml
-    interval: 86400
-  tld-not-cn:
-    type: http
-    behavior: domain
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/tld-not-cn.txt
-    path: ./ruleset/tld-not-cn.yaml
-    interval: 86400
-  telegramcidr:
-    type: http
-    behavior: ipcidr
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/telegramcidr.txt
-    path: ./ruleset/telegramcidr.yaml
-    interval: 86400
-  applications:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/applications.txt
-    path: ./ruleset/applications.yaml
-    interval: 86400
-  Disney:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Disney/Disney.yaml
-    path: ./ruleset/disney.yaml
-    interval: 86400
-  Netflix:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix.yaml
-    path: ./ruleset/netflix.yaml
-    interval: 86400
-  YouTube:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/YouTube/YouTube.yaml
-    path: ./ruleset/youtube.yaml
-    interval: 86400
-  HBO:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/HBO/HBO.yaml
-    path: ./ruleset/hbo.yaml
-    interval: 86400
-  OpenAI:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.yaml
-    path: ./ruleset/openai.yaml
-    interval: 86400
-  ClaudeAI:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude.yaml
-    path: ./ruleset/claudeai.yaml
-    interval: 86400
-  Bing:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Bing/Bing.yaml
-    path: ./ruleset/bing.yaml
-    interval: 86400
-  Google:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Google/Google.yaml
-    path: ./ruleset/google.yaml
-    interval: 86400
-  GitHub:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GitHub/GitHub.yaml
-    path: ./ruleset/github.yaml
-    interval: 86400
-  Spotify:
-    type: http
-    behavior: classical
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Spotify/Spotify.yaml
-    path: ./ruleset/spotify.yaml
-    interval: 86400
-  ChinaMaxDomain:
-    type: http
-    behavior: domain
-    interval: 86400
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaMax/ChinaMax_Domain.yaml
-    path: ./Rules/ChinaMaxDomain.yaml
-  ChinaMaxIPNoIPv6:
-    type: http
-    behavior: ipcidr
-    interval: 86400
-    url: https://gh-proxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaMax/ChinaMax_IP_No_IPv6.yaml
-    path: ./Rules/ChinaMaxIPNoIPv6.yaml
 rules:
-  - RULE-SET,YouTube,YouTube,no-resolve
-  - RULE-SET,Google,Google,no-resolve
-  - RULE-SET,GitHub,GitHub
-  - RULE-SET,telegramcidr,Telegram,no-resolve
-  - RULE-SET,Spotify,Spotify,no-resolve
-  - RULE-SET,Netflix,Netflix
-  - RULE-SET,HBO,HBO
-  - RULE-SET,Bing,Bing
-  - RULE-SET,OpenAI,OpenAI
-  - RULE-SET,ClaudeAI,ClaudeAI
-  - RULE-SET,Disney,Disney
-  - RULE-SET,proxy,全球代理
-  - RULE-SET,gfw,全球代理
-  - RULE-SET,applications,本地直连
-  - RULE-SET,ChinaMaxDomain,本地直连
-  - RULE-SET,ChinaMaxIPNoIPv6,本地直连,no-resolve
-  - RULE-SET,lan,本地直连,no-resolve
-  - GEOIP,CN,本地直连
-  - MATCH,漏网之鱼
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOSITE,cn,DIRECT
+  - GEOIP,CN,DIRECT,no-resolve
+  - MATCH,手动切换
 EOF
 
 }
