@@ -9327,6 +9327,7 @@ proxy-groups:
 
 rules:
   - GEOIP,private,DIRECT,no-resolve
+  - DOMAIN-SUFFIX,googleapis.cn,手动切换
   - GEOSITE,cn,DIRECT
   - GEOIP,CN,DIRECT,no-resolve
   - MATCH,手动切换
